@@ -1,31 +1,37 @@
 #!/usr/bin/env python3
 """
-Pi4 Magnifier with Tkinter-embedded video + Bluetooth Keypad Control
+Pi4 Magnifier with Tkinter‑embedded video + Bluetooth Keypad/Keyboard Control + FPS label
 """
 
 import cv2
+import time
 import tkinter as tk
 from PIL import Image, ImageTk
 from evdev import InputDevice, categorize, ecodes
 import threading
 
 root = tk.Tk()
-root.title("Pi4 Magnifier (Tkinter Embedded)")
+root.title("Pi4 Magnifier (Tkinter Embedded + FPS)")
 
 cap = cv2.VideoCapture(0)
-print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
 zoom_level = 1.0
 
 video_label = tk.Label(root)
 video_label.pack()
 
+fps_label = tk.Label(root, text="FPS: 0")
+fps_label.pack()
+
+# FPS tracking
+last_time = time.time()
+frame_count = 0
+fps = 0
+
 def update_frame():
-    global zoom_level
+    global zoom_level, frame_count, last_time, fps
     ret, frame = cap.read()
     if ret:
         h, w = frame.shape[:2]
@@ -43,11 +49,21 @@ def update_frame():
 
         video_label.imgtk = imgtk
         video_label.configure(image=imgtk)
+
+        # FPS calculation
+        frame_count += 1
+        if frame_count >= 10:
+            current_time = time.time()
+            fps = frame_count / (current_time - last_time)
+            last_time = current_time
+            frame_count = 0
+        fps_label.config(text=f"FPS: {fps:.1f}")
+
     root.after(30, update_frame)
 
 def zoom_in():
     global zoom_level
-    zoom_level = min(zoom_level + 0.1, 3.0)
+    zoom_level = min(zoom_level + 0.1, 4.0)
     print("Zoom in:", zoom_level)
 
 def zoom_out():
