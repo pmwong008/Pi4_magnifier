@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pi4 Magnifier with Tkinter‑embedded video + Bluetooth Keypad/Keyboard Control + FPS label
+Pi4 Magnifier with Tkinter-embedded video + Bluetooth Keypad/Keyboard Control + FPS label
 """
 
 import cv2
@@ -15,7 +15,7 @@ root.title("Pi4 Magnifier (Tkinter Embedded + FPS)")
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 450)
 
 zoom_level = 1.0
 
