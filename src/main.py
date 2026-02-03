@@ -9,6 +9,7 @@ import argparse
 import threading
 from evdev import InputDevice, categorize, ecodes
 
+
 # --- Parse resolution argument ---
 parser = argparse.ArgumentParser()
 parser.add_argument("--res", default="800x450", help="Resolution WxH")
@@ -45,7 +46,9 @@ def quit_magnifier():
     running = False
     cv2.destroyAllWindows()
 
+
 # --- Keypad listener ---
+
 def keypad_listener(event_path="/dev/input/event0"):
     try:
         dev = InputDevice(event_path)
@@ -65,8 +68,7 @@ def keypad_listener(event_path="/dev/input/event0"):
                 elif key_event.keycode in ('KEY_KP0', 'KEY_0'):
                     reset_zoom()
                 elif key_event.keycode in ('KEY_ESC', 'KEY_KPENTER'):
-                    running = False
-                    break
+                    quit_magnifier()
 
 
 # --- Main loop ---
@@ -93,7 +95,6 @@ def run_magnifier():
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             quit_magnifier()
-
 
     cap.release()
     # cv2.destroyAllWindows()
